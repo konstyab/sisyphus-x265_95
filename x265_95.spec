@@ -1,0 +1,101 @@
+Name: x265_95
+Version: 2.1
+Release: alt1
+
+%define repo_p7 0
+
+Summary: Executable coming with libx265_95
+
+License: GPLv2
+Group: Video
+Url: http://x265.org
+
+Packager: Sample Maintainer <samplemaintainer@altlinux.org>
+BuildPreReq: yasm cmake
+%if %repo_p7
+BuildPreReq: gcc-c++
+%else
+BuildPreReq: gcc5-c++
+%endif
+BuildRequires(pre): rpm-macros-cmake
+Source: %name-%version.tar
+
+%description
+Executable coming with libx265_95
+
+%prep
+%setup
+
+%build
+pushd source
+%cmake_insource
+%make_build
+popd
+
+%install
+pushd source
+%makeinstall_std
+popd
+
+%files
+%doc COPYING readme.rst
+%_bindir/*
+
+%package -n libx265_95
+Summary: H.265 codec implementation
+Group: Video
+
+%description -n libx265_95
+x265 is a commercially funded open source implementation of
+the H.265/High Efficiency Video Coding (HEVC) compression
+standard.  The x265 project is led by MulticoreWare, a
+leading provider of high performance video software libraries.
+The project also has several corporate sponsors whose generous
+contributions have allowed the project to exist.
+
+x265 is available under the GNU GPL v2 license.  Source code
+is available from the x265 Project Page.  Development is funded
+through license fees paid by commercial companies, who receive
+a commercial license which is less restrictive than the GPL v2
+(with respect to open-source requirements for the system that
+integrates x265).  Pricing and commercial license terms are
+available under a Non-Disclosure Agreement.  Please contact
+us by writing to license @ x265.com.
+
+The x265 team has licensed the rights to port and adapt x264
+for use in x265.  Most of the video encoding algorithms developed
+for x264 have been incorporated in x265, including rate control
+functions, the lookahead function, macroblock tree, b-pyramid
+and adaptive quantization
+
+%files -n libx265_95
+%_libdir/*.so.*
+
+%package -n libx265-devel
+Summary: Development files for libx265
+Group: Development/C
+Requires: libx265_95 = %version-%release
+
+%description -n libx265-devel
+Development files for libx265
+
+%package -n libx265-devel-static
+Summary: Static library for libx265-devel
+Group: Development/C
+Requires: libx265-devel = %version-%release
+
+%description -n libx265-devel-static
+Static library for libx265-devel
+
+%files -n libx265-devel
+/usr/include/*
+%_libdir/pkgconfig/*
+%_libdir/*.so
+
+%files -n libx265-devel-static
+%_libdir/*.a
+
+%changelog
+* Thu Dec 15 2016 Sample Maintainer <samplemaintainer@altlinux.org> 2.1-alt1
+- initial build
+
